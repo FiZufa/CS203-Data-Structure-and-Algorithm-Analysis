@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class A5 {
+public class A {
     public static void main(String[] args){
     //binary search problem
 
