@@ -19,10 +19,10 @@ public class D {
 
     }
     public static String mahjongArr(String str){
-        int[][] m = new int[4][10]; // (1)
+        int[][] m = new int[4][10]; // (1) create an array
 
-        for(int i=0 ; i < 14 ; i++){ // (2)
-            switch (str.charAt(i*2+1)){
+        for(int i=0 ; i < 14 ; i++){ // (2) store to the value according to the number and suit
+            switch (str.charAt(i*2+1)){  
                 case 'w' :
                     m[0][str.charAt(i*2) - 48]++ ;
                     m[0][0]++ ;
@@ -42,65 +42,65 @@ public class D {
             }
 
         }
-       if(checkQuetou(m)){
+       if(checkQuetou(m)){ 
            return "Blessing of Heaven";
        } else {
            return "Bad Luck" ;
        }
     }
 
-    public static boolean checkQuetou(int[][] m){
+    public static boolean checkQuetou(int[][] m){ // function to remove possible Quetou, connected with checkKeziShunzi(m)
         for(int i=0 ; i<4 ; i++){
             for(int j=1 ; j<10 ; j++){
-                if(m[i][j] >= 2){
+                if(m[i][j] >= 2){ // (3)-(4) if possible Quetou exist, remove them
                     m[i][j] -= 2 ;
                     m[i][0] -= 2 ;
                     if(checkKeziShunzi(m)){ return true ;} //WIN
-                    m[i][j] += 2 ;
+                    m[i][j] += 2 ; // if checkKeziShunzi(m) false, get the Quetou back to the original position -> do next iteration
                     m[i][0] += 2 ;
                 }
             }
         }
-        return false ;
+        return false ; // there's no possible Quetou anymore
     }
 
-    public static boolean checkKeziShunzi(int[][] m){
+    public static boolean checkKeziShunzi(int[][] m){ // (5) - (6)
         for(int i=1 ; i<10 ; i++){ //check zi
             if(m[3][i]%3 != 0) {
-                return false ;
+                return false ; // Zi doesn't satisfy Shunzi, return false
             }
         }
         for(int i=0 ; i<3 ; i++){ //check w b z
-            if(!checkWBZ(m[i])){
-                return false ;
+            if(!checkWBS(m[i])){
+                return false ; // w b s doen't satisfy Kezi and Shunzi, return false
             }
         }
-        return true;
+        return true; // w b s doesn't satisfy
     }
 
-    public static boolean checkWBZ(int[] wbz){
-        if(wbz[0] == 0){ //base case
+    public static boolean checkWBS(int[] wbs){ // (7) check w b s
+        if(wbs[0] == 0){ //base case
             return true;
         }
-        for(int i=0 ; i<10 ; i++){
-            if(wbz[i] >= 3){
-                wbz[i] -= 3 ;
-                wbz[0] -= 3 ;
-                if (checkWBZ(wbz)){return true ;}
-                wbz[i] += 3 ;
-                wbz[0] += 3 ;
+        for(int i=0 ; i<10 ; i++){ 
+            if(wbs[i] >= 3){    // check Kezi
+                wbs[i] -= 3 ;
+                wbs[0] -= 3 ;
+                if (checkWBS(wbs)){return true ;}
+                wbs[i] += 3 ; // if false get shunzi back
+                wbs[0] += 3 ;
             }
-            if(wbz[i]>=1 && i<=7 && wbz[i+1]>=1 && wbz[i+2]>=1){
-                wbz[i] -= 1 ;
-                wbz[i+1] -= 1 ;
-                wbz[i+2] -= 1 ;
-                if (checkWBZ(wbz)){return true ;}
-                wbz[i] += 1 ;
-                wbz[i+1] += 1 ;
-                wbz[i+2] += 1 ;
+            if(wbs[i]>=1 && i<=7 && wbs[i+1]>=1 && wbs[i+2]>=1){ // check Shunzi
+                wbs[i] -= 1 ;
+                wbs[i+1] -= 1 ;
+                wbs[i+2] -= 1 ;
+                if (checkWBS(wbs)){return true ;}
+                wbs[i] += 1 ; // if false get shunzi back
+                wbs[i+1] += 1 ;
+                wbs[i+2] += 1 ;
             }
         }
-        return false ;
+        return false ; // false if the array still has tiles  
     }
 
 }
